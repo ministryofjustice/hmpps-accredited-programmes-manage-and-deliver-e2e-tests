@@ -6,3 +6,18 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+### IntelliJ IDEA ###
+.idea/**/*
+!.idea/runConfigurations
+!.idea/runConfigurations/**/*
+!.idea/codeStyles/**/*
+!.idea/inspectionProfiles/**/*
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+.eslintcache
