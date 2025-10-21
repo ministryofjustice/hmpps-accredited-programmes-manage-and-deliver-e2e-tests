@@ -6,7 +6,7 @@ dotenv.config()
 const config = {
   HMPPS_COMMUNITY_AUTH_USERNAME: process.env.HMPPS_COMMUNITY_AUTH_USERNAME,
   HMPPS_COMMUNITY_AUTH_PASSWORD: process.env.HMPPS_COMMUNITY_AUTH_PASSWORD,
-  FIND_AND_REFER_URL: process.env.FIND_AND_REFER_URL,
+  MANAGE_AND_DELIVER_URL: process.env.MANAGE_AND_DELIVER_URL
 }
 
 export function getConfig(): AppConfig {
@@ -25,7 +25,7 @@ export function getConfig(): AppConfig {
 export type AppConfig = {
   HMPPS_COMMUNITY_AUTH_USERNAME: string
   HMPPS_COMMUNITY_AUTH_PASSWORD: string
-  FIND_AND_REFER_URL: string
+  MANAGE_AND_DELIVER_URL: string
 }
 
 export default getConfig
