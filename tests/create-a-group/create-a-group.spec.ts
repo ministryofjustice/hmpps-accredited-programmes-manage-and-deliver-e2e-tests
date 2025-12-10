@@ -33,12 +33,12 @@ test.describe('Create a group', () => {
       await enterAndSubmitWhenWillGroupRunData(page, whenWillGroupRunData)
       await selectAndSubmitCohortRadioOption(page, 'General offence, learning disabilities and challenges (LDC)')
       await selectAndSubmitSexRadioOption(page, 'Female')
-      await enterAndSubmitPdu(page, 'Manchester North')
-      await selectAndSubmitDeliveryLocation(page, 'Stockport: Stockport Probation Office')
+      await enterAndSubmitPdu(page, 'Cleveland')
+      await selectAndSubmitDeliveryLocation(page, 'Middlesbrough (Borough Rd)')
       await enterAndSubmitGroupFacilitators(page, 'R&MP Practitioner', ['R&MP Practitioner', 'Unallocated Staff'], ['R&MP Practitioner', 'Unallocated Staff'])
       await verifyCheckAnswersPageContent(page, '9/12/2099', ['Monday, 1:01am to 3:31am', 'Wednesday, 2:02pm to 4:32pm'],
-          'General offence, learning disabilities and challenges (LDC)', 'Female', 'Manchester North',
-          'Stockport: Stockport Probation Office', 'R&MP Practitioner',
+          'General offence, learning disabilities and challenges (LDC)', 'Female', 'Cleveland',
+          'Middlesbrough (Borough Rd)', 'R&MP Practitioner',
           ['R&MP Practitioner', 'Unallocated Staff'], ['R&MP Practitioner', 'Unallocated Staff'])
       await submitCheckYourAnswers(page)
   })
