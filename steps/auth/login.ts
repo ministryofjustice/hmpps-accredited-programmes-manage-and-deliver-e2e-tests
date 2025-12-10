@@ -3,7 +3,7 @@ import { getConfig } from '../../appConfig'
 
 const appConfig = getConfig()
 
-export const findAndReferLoginCommunity = async (page: Page) => {
+export const manageAndDeliverCommunityLogin = async (page: Page) => {
   await page.goto(appConfig.MANAGE_AND_DELIVER_URL)
   await page.getByLabel('Username').fill(appConfig.HMPPS_COMMUNITY_AUTH_USERNAME)
   await page.getByLabel('Password').fill(appConfig.HMPPS_COMMUNITY_AUTH_PASSWORD)
