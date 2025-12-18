@@ -101,7 +101,7 @@ export const selectAndSubmitSexRadioOption = async (
 };
 
 export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
-  await page.locator("#create-group-pdu").selectOption(pdu);
+  await page.locator("#create-group-pdu").fill(pdu);
   await page.keyboard.press("Enter");
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page).toHaveURL(
