@@ -101,6 +101,7 @@ export const selectAndSubmitSexRadioOption = async (
 };
 
 export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
+  await page.waitForTimeout(5000);
   await page.locator("#create-group-pdu").fill(pdu);
   await page.keyboard.press("Enter");
   await page.getByRole("button", { name: "Continue" }).click();
@@ -124,6 +125,7 @@ export const enterAndSubmitGroupFacilitators = async (
   facilitators: string[] | null,
   coverFacilitators: string[]
 ) => {
+  await page.waitForTimeout(5000);
   await page.locator("#create-group-treatment-manager").fill(treatmentManager);
   await page.keyboard.press("Enter");
 
@@ -205,5 +207,5 @@ export const verifyCheckAnswersPageContent = async (
 
 export const submitCheckYourAnswers = async (page: Page) => {
   await page.getByRole("button", { name: "Create this group" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-review-details/);
+  await expect(page).toHaveURL(/.*?\groupCreated/);
 };
