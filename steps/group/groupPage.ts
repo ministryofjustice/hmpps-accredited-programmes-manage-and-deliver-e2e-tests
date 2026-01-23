@@ -123,7 +123,7 @@ export const enterAndSubmitGroupFacilitators = async (
   page: Page,
   treatmentManager: string | null,
   facilitators: string[] | null,
-  coverFacilitators: string[]
+  coverFacilitators: string[] | null
 ) => {
   await page.waitForTimeout(5000);
   await page.locator("#create-group-treatment-manager").fill(treatmentManager);

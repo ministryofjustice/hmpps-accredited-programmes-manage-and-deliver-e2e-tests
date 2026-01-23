@@ -43,8 +43,8 @@ test.describe("Create a group", () => {
     await enterAndSubmitGroupFacilitators(
       page,
       "R&MP Practitioner",
-      ["R&MP Practitioner", "Unallocated Staff"],
-      ["R&MP Practitioner", "Unallocated Staff"]
+      ["R&MP Practitioner"],
+      ["Unallocated Staff"]
     );
     await verifyCheckAnswersPageContent(
       page,
@@ -55,8 +55,8 @@ test.describe("Create a group", () => {
       "Cleveland",
       "Middlesbrough (Borough Rd)",
       "R&MP Practitioner",
-      ["R&MP Practitioner", "Unallocated Staff"],
-      ["R&MP Practitioner", "Unallocated Staff"]
+      ["R&MP Practitioner"],
+      ["Unallocated Staff"]
     );
     await submitCheckYourAnswers(page);
   });
