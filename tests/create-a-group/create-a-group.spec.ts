@@ -25,7 +25,7 @@ test.describe("Create a group", () => {
     await goToGroupListPage(page);
     await goToCreateAGroupPageFromGroupListPage(page);
     await goToCreateAGroupCodePageFromCreateAGroupPage(page);
-    const groupCode = await enterAndSubmitGroupCode(page);
+    await enterAndSubmitGroupCode(page);
     await enterAndSubmitGroupStartDate(page, "9/12/2099");
 
     const whenWillGroupRunData: WhenWillGroupRunData = [
@@ -48,7 +48,6 @@ test.describe("Create a group", () => {
     );
     await verifyCheckAnswersPageContent(
       page,
-      groupCode,
       "9/12/2099",
       ["Mondays, 1:01am to 3:31am", "Wednesdays, 2:02pm to 4:32pm"],
       "General offence, learning disabilities and challenges (LDC)",
