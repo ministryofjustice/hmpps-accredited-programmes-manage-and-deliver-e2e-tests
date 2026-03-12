@@ -33,35 +33,22 @@ export const goToGroupListPage = async (page: Page) => {
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
   await page.getByRole("button", { name: "Create a group" }).click();
-
-  if (!page.url().includes("/group/create-a-group/create-group")) {
-    await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/group/create-a-group/create-group");
-  }
-
-  await expect(page).toHaveURL(/.*\/group\/create-a-group\/create-group$/);
+  await expect(page).toHaveURL(/.*group\/create-a-group\/create-group/);
 };
 
 export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
   page: Page
 ) => {
   await page.getByRole("button", { name: "Start" }).click();
-
-  if (!page.url().includes("/group/create-a-group/create-group-code")) {
-    await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/group/create-a-group/create-group-code");
-  }
-
-  await expect(page).toHaveURL(/.*\/group\/create-a-group\/create-group-code$/);
+  await expect(page).toHaveURL(/.*group\/create-a-group\/create-group-code/);
 };
 
-export const enterAndSubmitGroupCode = async (page: Page): Promise<string> => {
-  const letters = () => String.fromCharCode(65 + Math.floor(Math.random() * 26));
-  const randomGroupCode = letters() + letters() + letters() + letters() + letters() + Math.floor(Math.random() * 10);
+export const enterAndSubmitGroupCode = async (page: Page) => {
+  const randomGroupCode =
+    "e2e-test-group-code-" + Math.floor(Math.random() * 1000000);
   await page.getByRole("textbox").fill(randomGroupCode);
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-start-date/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
-  return randomGroupCode;
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(/.*group\/create-a-group\/group-start-date/);
 };
 
 export const enterAndSubmitGroupStartDate = async (
@@ -69,25 +56,15 @@ export const enterAndSubmitGroupStartDate = async (
   date: string
 ) => {
   await page.getByRole("textbox").fill(date);
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-days-and-times/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(/.*group\/create-a-group\/group-days-and-times/);
 };
 
 export const enterAndSubmitWhenWillGroupRunData = async (
   page: Page,
   data: WhenWillGroupRunData
 ) => {
-  if (!data) {
-    throw new Error("WhenWillGroupRunData is required")
-  }
-
   for (const { dayOfWeekCheckbox, hour, minute, ampm } of data) {
-    if (hour === null || minute === null || ampm === null) {
-      throw new Error(`Incomplete schedule values for ${dayOfWeekCheckbox}`)
-    }
-
     await page.getByRole("checkbox", { name: dayOfWeekCheckbox }).check();
     await page
       .locator(`#${dayOfWeekCheckbox.toLowerCase()}-hour`)
@@ -99,10 +76,8 @@ export const enterAndSubmitWhenWillGroupRunData = async (
       .locator(`#${dayOfWeekCheckbox.toLowerCase()}-ampm`)
       .selectOption(ampm);
   }
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-cohort/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(/.*group\/create-a-group\/group-cohort/);
 };
 
 export const selectAndSubmitCohortRadioOption = async (
@@ -110,10 +85,8 @@ export const selectAndSubmitCohortRadioOption = async (
   radioOption: CohortRadioOption
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-sex/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(/.*group\/create-a-group\/group-sex/);
 };
 
 export const selectAndSubmitSexRadioOption = async (
@@ -121,20 +94,20 @@ export const selectAndSubmitSexRadioOption = async (
   radioOption: SexRadioOption
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-probation-delivery-unit/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(
+    /.*group\/create-a-group\/group-probation-delivery-unit/
+  );
 };
 
 export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
   await page.waitForTimeout(5000);
   await page.locator("#create-group-pdu").fill(pdu);
   await page.keyboard.press("Enter");
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-delivery-location/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(
+    /.*group\/create-a-group\/group-delivery-location/
+  );
 };
 
 export const selectAndSubmitDeliveryLocation = async (
@@ -142,10 +115,8 @@ export const selectAndSubmitDeliveryLocation = async (
   radioOption: string
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-facilitators/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(/.*group\/create-a-group\/group-facilitators/);
 };
 
 export const enterAndSubmitGroupFacilitators = async (
@@ -154,16 +125,6 @@ export const enterAndSubmitGroupFacilitators = async (
   facilitators: string[] | null,
   coverFacilitators: string[] | null
 ) => {
-  if (treatmentManager === null) {
-    throw new Error("treatmentManager is required")
-  }
-  if (facilitators === null) {
-    throw new Error("facilitators are required")
-  }
-  if (coverFacilitators === null) {
-    throw new Error("coverFacilitators are required")
-  }
-
   await page.waitForTimeout(5000);
   await page.locator("#create-group-treatment-manager").fill(treatmentManager);
   await page.keyboard.press("Enter");
@@ -183,10 +144,8 @@ export const enterAndSubmitGroupFacilitators = async (
     "Add another cover facilitator"
   );
 
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-review-details/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(/.*group\/create-a-group\/group-review-details/);
 };
 
 export const addFacilitator = async (
@@ -210,7 +169,6 @@ export const addFacilitator = async (
 
 export const verifyCheckAnswersPageContent = async (
   page: Page,
-  groupCode: string,
   date: string,
   dayAndTime: string[],
   cohort: string,
@@ -222,7 +180,7 @@ export const verifyCheckAnswersPageContent = async (
   coverFacilitators: string[]
 ) => {
   await expect(page.locator('dt:has-text("Group Code") + dd')).toContainText(
-    groupCode
+    "e2e-test-group-code"
   );
   await expect(page.locator('dt:has-text("Date") + dd')).toContainText(date);
   await expect(page.locator('dt:has-text("Day and time") + dd')).toContainText(
@@ -251,4 +209,3 @@ export const submitCheckYourAnswers = async (page: Page) => {
   await page.getByRole("button", { name: "Create this group" }).click();
   await expect(page).toHaveURL(/.*?\groupCreated/);
 };
-
