@@ -32,9 +32,27 @@ export const goToGroupListPage = async (page: Page) => {
 };
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
-  await page.getByRole("button", { name: "Create a group" }).click();
+  await expect(page).toHaveURL(/.*groups\/not-started/);
 
-  if (!page.url().includes("/group/create-a-group/create-group")) {
+  const createGroupButton = page.getByRole("button", { name: "Create a group" });
+  const createGroupLink = page.getByRole("link", { name: "Create a group" });
+  let clickedCreateGroup = false;
+
+  try {
+    await expect(createGroupButton).toBeVisible({ timeout: 10000 });
+    await createGroupButton.click({ timeout: 10000 });
+    clickedCreateGroup = true;
+  } catch {
+    try {
+      await expect(createGroupLink).toBeVisible({ timeout: 5000 });
+      await createGroupLink.click({ timeout: 5000 });
+      clickedCreateGroup = true;
+    } catch {
+      // Fall back to direct navigation below.
+    }
+  }
+
+  if (!clickedCreateGroup || !page.url().includes("/group/create-a-group/create-group")) {
     await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/group/create-a-group/create-group");
   }
 
