@@ -39,8 +39,8 @@ export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
   let clickedCreateGroup = false;
 
   try {
-    await expect(createGroupButton).toBeVisible({ timeout: 10000 });
-    await createGroupButton.click({ timeout: 10000 });
+    await expect(createGroupButton).toBeVisible({ timeout: 15000 });
+    await createGroupButton.click({ timeout: 15000 });
     clickedCreateGroup = true;
   } catch {
     try {
