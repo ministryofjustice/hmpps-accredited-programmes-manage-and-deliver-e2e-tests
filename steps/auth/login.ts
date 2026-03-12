@@ -8,6 +8,6 @@ export const manageAndDeliverCommunityLogin = async (page: Page) => {
   await page.getByLabel('Username').fill(appConfig.HMPPS_COMMUNITY_AUTH_USERNAME)
   await page.getByLabel('Password').fill(appConfig.HMPPS_COMMUNITY_AUTH_PASSWORD)
   await page.locator('#submit', { hasText: 'Sign in' }).click()
-  await expect(page.getByText('Building Choices:')).toBeVisible()
+  await expect(page.getByText('Home')).toBeVisible()
 }
 
