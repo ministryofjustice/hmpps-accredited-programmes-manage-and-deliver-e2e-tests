@@ -10,4 +10,3 @@ export const manageAndDeliverCommunityLogin = async (page: Page) => {
   await page.locator('#submit', { hasText: 'Sign in' }).click()
   await expect(page.getByText('Home')).toBeVisible()
 }
-

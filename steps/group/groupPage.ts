@@ -251,4 +251,3 @@ export const submitCheckYourAnswers = async (page: Page) => {
   await page.getByRole("button", { name: "Create this group" }).click();
   await expect(page).toHaveURL(/.*?\groupCreated/);
 };
-
