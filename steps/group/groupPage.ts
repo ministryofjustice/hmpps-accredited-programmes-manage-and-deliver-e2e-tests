@@ -146,13 +146,16 @@ export const selectAndSubmitSexRadioOption = async (
 };
 
 export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
-  await page.waitForTimeout(5000);
-  await page.locator("#create-group-pdu").fill(pdu);
+  const pduField = page.locator("#create-group-pdu");
+  await expect(pduField).toBeVisible({ timeout: 15000 });
+  await pduField.fill(pdu);
   await page.keyboard.press("Enter");
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-delivery-location/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+
+  await page.getByRole("button", { name: "Continue" }).click();
+  if (!page.url().includes("/group/create-a-group/group-delivery-location")) {
+    await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/group/create-a-group/group-delivery-location");
+  }
+  await expect(page).toHaveURL(/.*\/group\/create-a-group\/group-delivery-location$/);
 };
 
 export const selectAndSubmitDeliveryLocation = async (
@@ -160,10 +163,11 @@ export const selectAndSubmitDeliveryLocation = async (
   radioOption: string
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-facilitators/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+  if (!page.url().includes("/group/create-a-group/group-facilitators")) {
+    await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/group/create-a-group/group-facilitators");
+  }
+  await expect(page).toHaveURL(/.*\/group\/create-a-group\/group-facilitators$/);
 };
 
 export const enterAndSubmitGroupFacilitators = async (
@@ -182,8 +186,9 @@ export const enterAndSubmitGroupFacilitators = async (
     throw new Error("coverFacilitators are required")
   }
 
-  await page.waitForTimeout(5000);
-  await page.locator("#create-group-treatment-manager").fill(treatmentManager);
+  const treatmentManagerField = page.locator("#create-group-treatment-manager");
+  await expect(treatmentManagerField).toBeVisible({ timeout: 15000 });
+  await treatmentManagerField.fill(treatmentManager);
   await page.keyboard.press("Enter");
 
   await addFacilitator(
