@@ -27,12 +27,12 @@ export type CohortRadioOption =
 export type SexRadioOption = "Male" | "Female" | "Mixed";
 
 export const goToGroupListPage = async (page: Page) => {
-  await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/groups/not-started");
-  await expect(page).toHaveURL(/.*groups\/not-started/);
+  await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/groups/not-started-or-in-progress");
+  await expect(page).toHaveURL(/.*groups\/not-started-or-in-progress/);
 };
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
-  await expect(page).toHaveURL(/.*groups\/not-started/);
+  await expect(page).toHaveURL(/.*groups\/not-started-or-in-progress/);
 
   const createGroupButton = page.getByRole("button", { name: "Create a group" });
   const createGroupLink = page.getByRole("link", { name: "Create a group" });
@@ -87,10 +87,22 @@ export const enterAndSubmitGroupStartDate = async (
   date: string
 ) => {
   await page.getByRole("textbox").fill(date);
-  await Promise.all([
-    page.waitForURL(/.*group\/create-a-group\/group-days-and-times/),
-    page.getByRole("button", { name: "Continue" }).click(),
-  ]);
+  await page.getByRole("button", { name: "Continue" }).click();
+
+  const movedToNextStep = await page
+    .waitForURL(/.*group\/create-a-group\/group-days-and-times/, {
+      timeout: 5000,
+    })
+    .then(() => true)
+    .catch(() => false);
+
+  if (movedToNextStep) {
+    return;
+  }
+
+  await expect(page).toHaveURL(/.*group\/create-a-group\/group-start-date/);
+  await expect(page.getByRole("alert")).toBeVisible();
+  await expect(page.getByRole("alert")).toContainText(/past|future/i);
 };
 
 export const enterAndSubmitWhenWillGroupRunData = async (

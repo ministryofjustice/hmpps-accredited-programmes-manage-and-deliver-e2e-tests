@@ -12,18 +12,19 @@
   "license": "ISC",
   "dependencies": {
     "@eslint/js": "^9.18.0",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
     "dotenv": "^16.4.7",
     "eslint": "^8.57.1",
-    "globals": "^15.14.0",
-    "typescript-eslint": "^8.21.0",
-    "@typescript-eslint/eslint-plugin": "^8.26.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-import-resolver-typescript": "^4.0.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-prettier": "^5.2.3",
-    "lint-staged": "^15.4.3"
+    "globals": "^15.14.0",
+    "lint-staged": "^15.4.3",
+    "playwright": "^1.58.2",
+    "typescript-eslint": "^8.21.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",

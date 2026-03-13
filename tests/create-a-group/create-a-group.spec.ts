@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { manageAndDeliverCommunityLogin } from "../../steps/auth/login";
 import {
   enterAndSubmitGroupCode,
@@ -25,7 +25,7 @@ test.describe("Create a group", () => {
     await goToGroupListPage(page);
     await goToCreateAGroupPageFromGroupListPage(page);
     await goToCreateAGroupCodePageFromCreateAGroupPage(page);
-    await enterAndSubmitGroupCode(page);
+    const groupCode = await enterAndSubmitGroupCode(page);
     await enterAndSubmitGroupStartDate(page, "9/12/2099");
 
     const whenWillGroupRunData: WhenWillGroupRunData = [
@@ -48,6 +48,7 @@ test.describe("Create a group", () => {
     );
     await verifyCheckAnswersPageContent(
       page,
+      groupCode,
       "9/12/2099",
       ["Mondays, 1:01am to 3:31am", "Wednesdays, 2:02pm to 4:32pm"],
       "General offence, learning disabilities and challenges (LDC)",
@@ -59,5 +60,24 @@ test.describe("Create a group", () => {
       ["Unallocated Staff"]
     );
     await submitCheckYourAnswers(page);
+  });
+
+  test("should show an error when group start date is in the past", async ({
+    page,
+  }) => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const pastDate = `${yesterday.getDate()}/${yesterday.getMonth() + 1}/${yesterday.getFullYear()}`;
+
+    await manageAndDeliverCommunityLogin(page);
+    await goToGroupListPage(page);
+    await goToCreateAGroupPageFromGroupListPage(page);
+    await goToCreateAGroupCodePageFromCreateAGroupPage(page);
+    await enterAndSubmitGroupCode(page);
+    await enterAndSubmitGroupStartDate(page, pastDate);
+
+    await expect(page).toHaveURL(/.*group\/create-a-group\/group-start-date/);
+    await expect(page.getByRole("alert")).toBeVisible();
+    await expect(page.getByRole("alert")).toContainText(/past|future/i);
   });
 });
