@@ -32,7 +32,13 @@ export const goToGroupListPage = async (page: Page) => {
 };
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
-  await page.getByRole("button", { name: "Create a group" }).click();
+  const createGroupControl = page
+    .getByRole("button", { name: "Create a group" })
+    .or(page.getByRole("link", { name: "Create a group" }))
+    .first();
+
+  await expect(createGroupControl).toBeVisible();
+  await createGroupControl.click();
   await expect(page).toHaveURL(/.*group\/create-a-group\/create-group/);
 };
 
