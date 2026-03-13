@@ -2,6 +2,10 @@ import { expect, type Page } from "@playwright/test";
 import { getConfig } from "../../appConfig";
 
 const appConfig = getConfig();
+const groupsListUrl = new URL(
+  "/groups/not-started-or-in-progress",
+  appConfig.MANAGE_AND_DELIVER_URL
+).toString();
 
 export type DayOfWeek =
   | "Monday"
@@ -27,8 +31,8 @@ export type CohortRadioOption =
 export type SexRadioOption = "Male" | "Female" | "Mixed";
 
 export const goToGroupListPage = async (page: Page) => {
-  await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/groups/not-started");
-  await expect(page).toHaveURL(/.*groups\/not-started/);
+  await page.goto(groupsListUrl);
+  await expect(page).toHaveURL(groupsListUrl);
 };
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
@@ -39,7 +43,8 @@ export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
 
   await expect(createGroupControl).toBeVisible();
   await createGroupControl.click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/create-group/);
+  await expect(page).toHaveURL(/.*group\/create-a-group/);
+  await expect(page.getByRole("heading", { name: "Create a group" })).toBeVisible();
 };
 
 export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
