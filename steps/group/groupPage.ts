@@ -64,14 +64,14 @@ export const enterAndSubmitWhenWillGroupRunData = async (
   page: Page,
   data: WhenWillGroupRunData
 ) => {
-  for (const { dayOfWeekCheckbox, hour, minute, ampm } of data) {
+  for (const { dayOfWeekCheckbox, hour, minute, ampm } of data || []) {
     await page.getByRole("checkbox", { name: dayOfWeekCheckbox }).check();
     await page
       .locator(`#${dayOfWeekCheckbox.toLowerCase()}-hour`)
-      .fill(hour.toString());
+      .fill(hour?.toString() || "");
     await page
       .locator(`#${dayOfWeekCheckbox.toLowerCase()}-minute`)
-      .fill(minute.toString());
+      .fill(minute?.toString() || "");
     await page
       .locator(`#${dayOfWeekCheckbox.toLowerCase()}-ampm`)
       .selectOption(ampm);
@@ -126,19 +126,19 @@ export const enterAndSubmitGroupFacilitators = async (
   coverFacilitators: string[] | null
 ) => {
   await page.waitForTimeout(5000);
-  await page.locator("#create-group-treatment-manager").fill(treatmentManager);
+  await page.locator("#create-group-treatment-manager").fill(treatmentManager || "");
   await page.keyboard.press("Enter");
 
   await addFacilitator(
     page,
-    facilitators,
+    facilitators || [],
     "create-group-facilitator",
     "create-group-facilitator-select",
     "Add another facilitator"
   );
   await addFacilitator(
     page,
-    coverFacilitators,
+    coverFacilitators || [],
     "create-group-cover-facilitator",
     "create-group-cover-facilitator-select",
     "Add another cover facilitator"
