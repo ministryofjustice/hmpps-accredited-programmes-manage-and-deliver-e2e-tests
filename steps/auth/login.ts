@@ -10,6 +10,6 @@ export const manageAndDeliverCommunityLogin = async (page: Page) => {
   await page.getByLabel('Password').fill(appConfig.HMPPS_COMMUNITY_AUTH_PASSWORD)
   await page.locator('#submit', { hasText: 'Sign in' }).click()
   await expect(page).toHaveURL(manageAndDeliverRootUrl)
-  await expect(page.getByText('Accredited Programmes')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Accredited Programmes' })).toBeVisible()
 }
 
