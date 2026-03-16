@@ -2,6 +2,10 @@ import { expect, type Page } from "@playwright/test";
 import { getConfig } from "../../appConfig";
 
 const appConfig = getConfig();
+const groupsListUrl = new URL(
+  "/groups/not-started-or-in-progress",
+  appConfig.MANAGE_AND_DELIVER_URL
+).toString();
 
 export type DayOfWeek =
   | "Monday"
@@ -27,13 +31,20 @@ export type CohortRadioOption =
 export type SexRadioOption = "Male" | "Female" | "Mixed";
 
 export const goToGroupListPage = async (page: Page) => {
-  await page.goto(appConfig.MANAGE_AND_DELIVER_URL + "/groups/not-started");
-  await expect(page).toHaveURL(/.*groups\/not-started/);
+  await page.goto(groupsListUrl);
+  await expect(page).toHaveURL(groupsListUrl);
 };
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
-  await page.getByRole("button", { name: "Create a group" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/create-group/);
+  const createGroupControl = page
+    .getByRole("button", { name: "Create a group" })
+    .or(page.getByRole("link", { name: "Create a group" }))
+    .first();
+
+  await expect(createGroupControl).toBeVisible();
+  await createGroupControl.click();
+  await expect(page).toHaveURL(/.*group\/create-a-group/);
+  await expect(page.getByRole("heading", { name: "Create a group" })).toBeVisible();
 };
 
 export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
@@ -64,14 +75,14 @@ export const enterAndSubmitWhenWillGroupRunData = async (
   page: Page,
   data: WhenWillGroupRunData
 ) => {
-  for (const { dayOfWeekCheckbox, hour, minute, ampm } of data) {
+  for (const { dayOfWeekCheckbox, hour, minute, ampm } of data || []) {
     await page.getByRole("checkbox", { name: dayOfWeekCheckbox }).check();
     await page
       .locator(`#${dayOfWeekCheckbox.toLowerCase()}-hour`)
-      .fill(hour.toString());
+      .fill(hour?.toString() || "");
     await page
       .locator(`#${dayOfWeekCheckbox.toLowerCase()}-minute`)
-      .fill(minute.toString());
+      .fill(minute?.toString() || "");
     await page
       .locator(`#${dayOfWeekCheckbox.toLowerCase()}-ampm`)
       .selectOption(ampm);
@@ -126,19 +137,19 @@ export const enterAndSubmitGroupFacilitators = async (
   coverFacilitators: string[] | null
 ) => {
   await page.waitForTimeout(5000);
-  await page.locator("#create-group-treatment-manager").fill(treatmentManager);
+  await page.locator("#create-group-treatment-manager").fill(treatmentManager || "");
   await page.keyboard.press("Enter");
 
   await addFacilitator(
     page,
-    facilitators,
+    facilitators || [],
     "create-group-facilitator",
     "create-group-facilitator-select",
     "Add another facilitator"
   );
   await addFacilitator(
     page,
-    coverFacilitators,
+    coverFacilitators || [],
     "create-group-cover-facilitator",
     "create-group-cover-facilitator-select",
     "Add another cover facilitator"
