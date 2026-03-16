@@ -2,6 +2,7 @@ import { expect, type Page } from '@playwright/test'
 import { getConfig } from '../../appConfig'
 
 const appConfig = getConfig()
+const manageAndDeliverRootUrl = new URL('/', appConfig.MANAGE_AND_DELIVER_URL).toString()
 
 export const manageAndDeliverCommunityLogin = async (page: Page) => {
   await page.goto(appConfig.MANAGE_AND_DELIVER_URL)
@@ -10,4 +11,6 @@ export const manageAndDeliverCommunityLogin = async (page: Page) => {
   await page.locator('#submit', { hasText: 'Sign in' }).click()
   await page.waitForURL(url => !url.pathname.includes('sign-in'))
   await expect(page.getByRole('link', { name: 'Sign out' })).toBeVisible()
+  await expect(page).toHaveURL(manageAndDeliverRootUrl)
+  await expect(page.getByRole('heading', { name: 'Accredited Programmes' })).toBeVisible()
 }
