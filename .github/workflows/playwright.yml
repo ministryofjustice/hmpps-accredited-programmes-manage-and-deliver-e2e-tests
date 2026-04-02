@@ -19,9 +19,9 @@ jobs:
     timeout-minutes: 60
     runs-on: [self-hosted, Linux, X64, hmpps-github-actions-runner]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: lts/*
 
@@ -35,7 +35,7 @@ jobs:
         id: playwright-tests
         run: npx playwright test
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
@@ -44,7 +44,7 @@ jobs:
     
       - name: Send a failure slack message
         if: steps.playwright-tests.outcome == 'failure' && env.ALERTS_SLACK_CHANNEL != 'NO_SLACK'
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@91efab103c0de0a537f72a35f6b8cda0ee76bf0a # v2.1.1
         with:
           channel-id: ${{ env.ALERTS_SLACK_CHANNEL }}
           payload: |
