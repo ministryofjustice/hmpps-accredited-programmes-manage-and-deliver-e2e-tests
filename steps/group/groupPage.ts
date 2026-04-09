@@ -45,6 +45,7 @@ export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
   await createGroupControl.click();
   await expect(page).toHaveURL(/.*group\/create-a-group/);
   await expect(page.getByRole("heading", { name: "Create a group" })).toBeVisible();
+
 };
 
 export const goToCreateAGroupCodePageFromCreateAGroupPage = async (

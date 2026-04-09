@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint . --cache --max-warnings 0",
-    "lint-fix": "eslint . --cache --max-warnings 0 --fix"
+    "lint-fix": "eslint . --cache --max-warnings 0 --fix",
+    "e2e_UI_test": "npx playwright test",
+    "e2e_UI_test_headed": "npx playwright test --headed",
+    "e2e_UI_test_chrome": "npx playwright test --project=chromium",
+    "e2e_UI_test_firefox": "npx playwright test --project=firefox",
+    "e2e_UI_test_webkit": "npx playwright test --project=webkit"
   },
   "keywords": [],
   "author": "",
