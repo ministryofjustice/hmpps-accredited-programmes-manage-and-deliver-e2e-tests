@@ -26,6 +26,7 @@ Update `.env` with below values
 MANAGE_AND_DELIVER_URL=
 HMPPS_COMMUNITY_AUTH_USERNAME=
 HMPPS_COMMUNITY_AUTH_PASSWORD=
+```
 
 ## Running the Tests
 **All the below scpritps are in package.json**
