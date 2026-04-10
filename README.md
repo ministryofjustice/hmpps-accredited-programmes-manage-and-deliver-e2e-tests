@@ -42,7 +42,7 @@ npm run e2e_UI_test_webkit         -   To run all the tests on webkit browser
 ## Running single test
 To run a single test in headed mode use the below command
 ```
-npx playwright test tests/example.spec.ts --headed
+npx playwright test tests/signin.spec.ts --headed
 ```
 ## Supported Browsers: 
 Chromium
