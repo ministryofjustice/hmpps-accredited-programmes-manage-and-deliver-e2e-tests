@@ -45,7 +45,6 @@ export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
   await createGroupControl.click();
   await expect(page).toHaveURL(/.*group\/create-a-group/);
   await expect(page.getByRole("heading", { name: "Create a group" })).toBeVisible();
-
 };
 
 export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
@@ -55,10 +54,8 @@ export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
   await expect(page).toHaveURL(/.*group\/create-a-group\/create-group-code/);
 };
 
-export const enterAndSubmitGroupCode = async (page: Page) => {
-  const randomGroupCode =
-    "e2e-test-group-code-" + Math.floor(Math.random() * 1000000);
-  await page.getByRole("textbox").fill(randomGroupCode);
+export const enterAndSubmitGroupCode = async (page: Page, groupCode: string) => {
+  await page.getByRole("textbox").fill(groupCode);
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page).toHaveURL(/.*group\/create-a-group\/group-start-date/);
 };
@@ -220,4 +217,10 @@ export const verifyCheckAnswersPageContent = async (
 export const submitCheckYourAnswers = async (page: Page) => {
   await page.getByRole("button", { name: "Create this group" }).click();
   await expect(page).toHaveURL(/.*?\groupCreated/);
+};
+
+export const verifyGroupCode = async (page: Page, groupCode: string) => {
+  await page.locator("#groupCode").fill(groupCode);
+  await page.getByRole('button', { name: 'Apply filters' }).click();  
+  await expect(page.locator(`text=${groupCode}`)).toBeVisible();
 };
