@@ -216,11 +216,12 @@ export const verifyCheckAnswersPageContent = async (
 
 export const submitCheckYourAnswers = async (page: Page) => {
   await page.getByRole("button", { name: "Create this group" }).click();
-  await expect(page).toHaveURL(/.*?\groupCreated/);
+  await expect(page).toHaveURL(/\/group\/[^/]+\/schedule-overview\?message=Group%20.*%20created\./);
 };
 
 export const verifyGroupCode = async (page: Page, groupCode: string) => {
+  await goToGroupListPage(page);
   await page.locator("#groupCode").fill(groupCode);
-  await page.getByRole('button', { name: 'Apply filters' }).click();  
+  await page.getByRole("button", { name: "Apply filters" }).click();
   await expect(page.locator(`text=${groupCode}`)).toBeVisible();
 };
