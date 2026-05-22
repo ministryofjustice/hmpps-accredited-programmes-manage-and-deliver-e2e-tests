@@ -173,9 +173,7 @@ export const enterAndSubmitGroupFacilitators = async (
 
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page).toHaveURL(/\/group-review-details(\/|\?|$)/);
-  await expect(
-    page.getByRole("heading", { name: /Check your answers/i })
-  ).toBeVisible();
+  await expect(page.locator('dt:has-text("Group Code") + dd')).toBeVisible();
 };
 
 export const addFacilitator = async (
