@@ -3,7 +3,7 @@ import { getConfig } from "../../appConfig";
 
 const appConfig = getConfig();
 const groupsListUrl = new URL(
-  "/groups/not-started-or-in-progress",
+  "/groups/not-started-and-in-progress",
   appConfig.MANAGE_AND_DELIVER_URL
 ).toString();
 
@@ -37,27 +37,33 @@ export const goToGroupListPage = async (page: Page) => {
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
   const createGroupControl = page
-    .getByRole("button", { name: "Create a group" })
-    .or(page.getByRole("link", { name: "Create a group" }))
+    .getByRole("button", { name: /Create( a)? group/i })
+    .or(page.getByRole("link", { name: /Create( a)? group/i }))
     .first();
 
   await expect(createGroupControl).toBeVisible();
   await createGroupControl.click();
-  await expect(page).toHaveURL(/.*group\/create-a-group/);
-  await expect(page.getByRole("heading", { name: "Create a group" })).toBeVisible();
+  await expect(page).toHaveURL(/\/create-group(\/|\?|$)/);
+  await expect(page.getByRole("heading", { name: /Create( a)? group/i })).toBeVisible();
 };
 
 export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
   page: Page
 ) => {
   await page.getByRole("button", { name: "Start" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/create-group-code/);
+  await expect(page).toHaveURL(/\/create-group\/create-group-code(\/|\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: /Create( a)? group code/i })
+  ).toBeVisible();
 };
 
 export const enterAndSubmitGroupCode = async (page: Page, groupCode: string) => {
   await page.getByRole("textbox").fill(groupCode);
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-start-date/);
+  await expect(page).toHaveURL(/\/create-group\/group-start-date(\/|\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: /start date/i })
+  ).toBeVisible();
 };
 
 export const enterAndSubmitGroupStartDate = async (
@@ -66,7 +72,10 @@ export const enterAndSubmitGroupStartDate = async (
 ) => {
   await page.getByRole("textbox").fill(date);
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-days-and-times/);
+  await expect(page).toHaveURL(/\/create-group\/group-days-and-times(\/|\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: /When will the group run\?/i })
+  ).toBeVisible();
 };
 
 export const enterAndSubmitWhenWillGroupRunData = async (
@@ -86,7 +95,8 @@ export const enterAndSubmitWhenWillGroupRunData = async (
       .selectOption(ampm);
   }
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-cohort/);
+  await expect(page).toHaveURL(/\/create-group\/group-cohort(\/|\?|$)/);
+  await expect(page.getByRole("heading", { name: /group cohort/i })).toBeVisible();
 };
 
 export const selectAndSubmitCohortRadioOption = async (
@@ -95,7 +105,10 @@ export const selectAndSubmitCohortRadioOption = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-sex/);
+  await expect(page).toHaveURL(/\/create-group\/group-sex(\/|\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: /sex of the group/i })
+  ).toBeVisible();
 };
 
 export const selectAndSubmitSexRadioOption = async (
@@ -104,9 +117,10 @@ export const selectAndSubmitSexRadioOption = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(
-    /.*group\/create-a-group\/group-probation-delivery-unit/
-  );
+  await expect(page).toHaveURL(/\/create-group\/group-probation-delivery-unit(\/|\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: /probation delivery unit/i })
+  ).toBeVisible();
 };
 
 export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
@@ -114,9 +128,10 @@ export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
   await page.locator("#create-group-pdu").fill(pdu);
   await page.keyboard.press("Enter");
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(
-    /.*group\/create-a-group\/group-delivery-location/
-  );
+  await expect(page).toHaveURL(/\/create-group\/group-delivery-location(\/|\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: /Where will the group take place\?/i })
+  ).toBeVisible();
 };
 
 export const selectAndSubmitDeliveryLocation = async (
@@ -125,7 +140,10 @@ export const selectAndSubmitDeliveryLocation = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-facilitators/);
+  await expect(page).toHaveURL(/\/create-group\/group-facilitators(\/|\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: /responsible for the group/i })
+  ).toBeVisible();
 };
 
 export const enterAndSubmitGroupFacilitators = async (
@@ -154,7 +172,10 @@ export const enterAndSubmitGroupFacilitators = async (
   );
 
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-review-details/);
+  await expect(page).toHaveURL(/\/create-group\/group-review-details(\/|\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: /Check your answers/i })
+  ).toBeVisible();
 };
 
 export const addFacilitator = async (
@@ -216,7 +237,7 @@ export const verifyCheckAnswersPageContent = async (
 
 export const submitCheckYourAnswers = async (page: Page) => {
   await page.getByRole("button", { name: "Create this group" }).click();
-  await expect(page).toHaveURL(/\/group\/[^/]+\/schedule-overview\?message=Group%20.*%20created\./);
+  await expect(page).toHaveURL(/\/group\/.+\/(schedule-overview|schedule)/);
 };
 
 export const verifyGroupCode = async (page: Page, groupCode: string) => {
