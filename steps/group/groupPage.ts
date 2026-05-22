@@ -51,7 +51,7 @@ export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
   page: Page
 ) => {
   await page.getByRole("button", { name: "Start" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?create-group-code(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/create-group-code(\/|\?|$)/);
   await expect(
     page.getByRole("heading", { name: /Create( a)? group code/i })
   ).toBeVisible();
@@ -60,7 +60,7 @@ export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
 export const enterAndSubmitGroupCode = async (page: Page, groupCode: string) => {
   await page.getByRole("textbox").fill(groupCode);
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?group-start-date(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/group-start-date(\/|\?|$)/);
   await expect(
     page.getByRole("heading", { name: /start date/i })
   ).toBeVisible();
@@ -72,7 +72,7 @@ export const enterAndSubmitGroupStartDate = async (
 ) => {
   await page.getByRole("textbox").fill(date);
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?group-days-and-times(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/group-days-and-times(\/|\?|$)/);
   await expect(
     page.getByRole("heading", { name: /When will the group run\?/i })
   ).toBeVisible();
@@ -95,7 +95,7 @@ export const enterAndSubmitWhenWillGroupRunData = async (
       .selectOption(ampm);
   }
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?group-cohort(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/group-cohort(\/|\?|$)/);
   await expect(page.getByRole("heading", { name: /group cohort/i })).toBeVisible();
 };
 
@@ -105,9 +105,9 @@ export const selectAndSubmitCohortRadioOption = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?group-sex(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/group-gender(\/|\?|$)/);
   await expect(
-    page.getByRole("heading", { name: /sex of the group/i })
+    page.getByRole("heading", { name: /gender of the group/i })
   ).toBeVisible();
 };
 
@@ -117,7 +117,7 @@ export const selectAndSubmitSexRadioOption = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?group-probation-delivery-unit(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/group-probation-delivery-unit(\/|\?|$)/);
   await expect(
     page.getByRole("heading", { name: /probation delivery unit/i })
   ).toBeVisible();
@@ -128,7 +128,7 @@ export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
   await page.locator("#create-group-pdu").fill(pdu);
   await page.keyboard.press("Enter");
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?group-delivery-location(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/group-delivery-location(\/|\?|$)/);
   await expect(
     page.getByRole("heading", { name: /Where will the group take place\?/i })
   ).toBeVisible();
@@ -140,7 +140,7 @@ export const selectAndSubmitDeliveryLocation = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?group-facilitators(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/group-facilitators(\/|\?|$)/);
   await expect(
     page.getByRole("heading", { name: /responsible for the group/i })
   ).toBeVisible();
@@ -172,7 +172,7 @@ export const enterAndSubmitGroupFacilitators = async (
   );
 
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/\/(create-group\/)?group-review-details(\/|\?|$)/);
+  await expect(page).toHaveURL(/\/group-review-details(\/|\?|$)/);
   await expect(
     page.getByRole("heading", { name: /Check your answers/i })
   ).toBeVisible();
