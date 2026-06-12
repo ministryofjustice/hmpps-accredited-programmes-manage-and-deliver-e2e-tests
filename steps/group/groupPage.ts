@@ -225,3 +225,32 @@ export const verifyGroupCode = async (page: Page, groupCode: string) => {
   await page.getByRole("button", { name: "Apply filters" }).click();
   await expect(page.locator(`text=${groupCode}`)).toBeVisible();
 };
+
+export const extractGroupIdFromUrl = (url: string): string => {
+  const match = url.match(/\/group\/([a-f0-9-]+)/);
+  if (!match || !match[1]) {
+    throw new Error(`Unable to extract group ID from URL: ${url}`);
+  }
+  return match[1];
+};
+
+export const goToGroupSessionsAndAttendancePage = async (
+  page: Page,
+  groupId: string
+) => {
+  const sessionsAndAttendanceUrl = new URL(
+    `/group/${groupId}/sessions-and-attendance`,
+    appConfig.MANAGE_AND_DELIVER_URL
+  ).toString();
+
+  await page.goto(sessionsAndAttendanceUrl);
+  await expect(page).toHaveURL(sessionsAndAttendanceUrl);
+};
+
+export const verifySessionsAndAttendancePageLoaded = async (page: Page) => {
+  await expect(
+    page.getByRole("heading", {
+      name: /sessions|attendance/i,
+    })
+  ).toBeVisible();
+};
