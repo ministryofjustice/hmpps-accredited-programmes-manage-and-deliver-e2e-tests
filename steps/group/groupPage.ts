@@ -3,7 +3,7 @@ import { getConfig } from "../../appConfig";
 
 const appConfig = getConfig();
 const groupsListUrl = new URL(
-  "/groups/not-started-or-in-progress",
+  "/groups/not-started-and-in-progress",
   appConfig.MANAGE_AND_DELIVER_URL
 ).toString();
 
@@ -37,13 +37,13 @@ export const goToGroupListPage = async (page: Page) => {
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
   const createGroupControl = page
-    .getByRole("button", { name: "Create a group" })
-    .or(page.getByRole("link", { name: "Create a group" }))
+    .getByRole("button", { name: /create( a)? group/i })
+    .or(page.getByRole("link", { name: /create( a)? group/i }))
     .first();
 
   await expect(createGroupControl).toBeVisible();
   await createGroupControl.click();
-  await expect(page).toHaveURL(/.*group\/create-a-group/);
+  await expect(page).toHaveURL(/.*\/create-group$/);
   await expect(page.getByRole("heading", { name: "Create a group" })).toBeVisible();
 };
 
@@ -51,13 +51,13 @@ export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
   page: Page
 ) => {
   await page.getByRole("button", { name: "Start" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/create-group-code/);
+  await expect(page).toHaveURL(/.*\/create-group-code$/);
 };
 
 export const enterAndSubmitGroupCode = async (page: Page, groupCode: string) => {
   await page.getByRole("textbox").fill(groupCode);
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-start-date/);
+  await expect(page).toHaveURL(/.*\/group-start-date$/);
 };
 
 export const enterAndSubmitGroupStartDate = async (
@@ -66,7 +66,7 @@ export const enterAndSubmitGroupStartDate = async (
 ) => {
   await page.getByRole("textbox").fill(date);
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-days-and-times/);
+  await expect(page).toHaveURL(/.*\/group-days-and-times$/);
 };
 
 export const enterAndSubmitWhenWillGroupRunData = async (
@@ -86,7 +86,7 @@ export const enterAndSubmitWhenWillGroupRunData = async (
       .selectOption(ampm);
   }
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-cohort/);
+  await expect(page).toHaveURL(/.*\/group-cohort$/);
 };
 
 export const selectAndSubmitCohortRadioOption = async (
@@ -95,7 +95,7 @@ export const selectAndSubmitCohortRadioOption = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-sex/);
+  await expect(page).toHaveURL(/.*\/group-gender$/);
 };
 
 export const selectAndSubmitSexRadioOption = async (
@@ -104,9 +104,7 @@ export const selectAndSubmitSexRadioOption = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(
-    /.*group\/create-a-group\/group-probation-delivery-unit/
-  );
+  await expect(page).toHaveURL(/.*\/group-probation-delivery-unit$/);
 };
 
 export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
@@ -114,9 +112,7 @@ export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
   await page.locator("#create-group-pdu").fill(pdu);
   await page.keyboard.press("Enter");
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(
-    /.*group\/create-a-group\/group-delivery-location/
-  );
+  await expect(page).toHaveURL(/.*\/group-delivery-location$/);
 };
 
 export const selectAndSubmitDeliveryLocation = async (
@@ -125,7 +121,7 @@ export const selectAndSubmitDeliveryLocation = async (
 ) => {
   await page.getByRole("radio", { name: radioOption }).check();
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-facilitators/);
+  await expect(page).toHaveURL(/.*\/group-facilitators$/);
 };
 
 export const enterAndSubmitGroupFacilitators = async (
@@ -154,7 +150,7 @@ export const enterAndSubmitGroupFacilitators = async (
   );
 
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page).toHaveURL(/.*group\/create-a-group\/group-review-details/);
+  await expect(page).toHaveURL(/.*\/group-review-details$/);
 };
 
 export const addFacilitator = async (
@@ -188,20 +184,23 @@ export const verifyCheckAnswersPageContent = async (
   facilitators: string[],
   coverFacilitators: string[]
 ) => {
-  await expect(page.locator('dt:has-text("Group Code") + dd')).toContainText(
+  await expect(page.locator('dt:has-text("Group code") + dd')).toContainText(
     "e2e-test-group-code"
   );
-  await expect(page.locator('dt:has-text("Date") + dd')).toContainText(date);
-  await expect(page.locator('dt:has-text("Day and time") + dd')).toContainText(
-    dayAndTime.join(" ")
-  );
+  await expect(page.locator('dt:has-text("Start date") + dd')).toContainText(date);
+
+  const daysAndTimes = page.locator('dt:has-text("Days and times") + dd');
+  for (const dayAndTimeValue of dayAndTime) {
+    await expect(daysAndTimes).toContainText(dayAndTimeValue);
+  }
+
   await expect(page.locator('dt:has-text("Cohort") + dd')).toContainText(
     cohort
   );
-  await expect(page.locator('dt:has-text("Sex") + dd')).toContainText(sex);
+  await expect(page.locator('dt:has-text("Gender") + dd')).toContainText(sex);
   await expect(page.locator('dt:has-text("PDU") + dd')).toContainText(pdu);
   await expect(
-    page.locator('dt:has-text("Delivery Location") + dd')
+    page.locator('dt:has-text("Delivery location") + dd')
   ).toContainText(deliveryLocation);
   await expect(
     page.locator('dt:has-text("Treatment Manager") + dd')
@@ -209,9 +208,12 @@ export const verifyCheckAnswersPageContent = async (
   await expect(
     page.locator('dt:has-text("Facilitators") + dd').first()
   ).toContainText(facilitators.join(" "));
-  await expect(
-    page.locator('dt:has-text("Cover facilitators") + dd').first()
-  ).toContainText(coverFacilitators.join(" "));
+
+  if (coverFacilitators.length > 0) {
+    await expect(
+      page.locator('dt:has-text("Cover facilitators") + dd').first()
+    ).toContainText(coverFacilitators.join(" "));
+  }
 };
 
 export const submitCheckYourAnswers = async (page: Page) => {
