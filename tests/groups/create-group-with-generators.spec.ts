@@ -29,10 +29,7 @@ import {
 } from "../../testData";
 
 test.describe("Create group - Using Test Data Generators", () => {
-  /**
-   * EXAMPLE 1: Using pre-built test scenarios
-   * Simple, reliable, matches documented test cases
-   */
+ 
   test("Using pre-built standard scenario", async ({ page }) => {
     const groupData = TestDataScenarios.standard();
 

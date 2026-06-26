@@ -1,7 +1,7 @@
 /**
  * Test data builders using the Builder pattern
  * These create complex test objects with sensible defaults
- * Allows fluent API for customization
+ * Allows fluent API for customisation
  */
 
 import {
@@ -9,12 +9,11 @@ import {
   generateCohort,
   generateCoverFacilitators,
   generateDate,
-  generateDayOfWeek,
   generateDeliveryLocation,
   generateDaysOfWeek,
   generateFacilitators,
   generateFutureDate,
-  generateGroupCodeSimple,
+  generateGroupCode,
   generateHour,
   generateMinute,
   generatePdu,
@@ -57,7 +56,7 @@ export interface GroupTestData {
 
 /**
  * Builder for test data with fluent API
- * Allows easy creation and customization of test data
+ * Allows easy creation and customisation of test data
  *
  * @example
  * const data = new GroupDataBuilder()
@@ -69,9 +68,9 @@ export class GroupDataBuilder {
   private data: GroupTestData;
 
   constructor() {
-    // Initialize with sensible defaults
+    // Initialise with sensible defaults
     this.data = {
-      groupCode: generateGroupCodeSimple(),
+      groupCode: generateGroupCode(),
       startDate: generateFutureDate(60),
       schedule: this.generateDefaultSchedule(),
       cohort: generateCohort(),
@@ -198,7 +197,7 @@ export const TestDataScenarios = {
    */
   minimal: () =>
     new GroupDataBuilder()
-      .withGroupCode(generateGroupCodeSimple())
+      .withGroupCode(generateGroupCode())
       .withStartDateExact(2099, 12, 9)
       .withSchedule([
         {
@@ -215,7 +214,7 @@ export const TestDataScenarios = {
    */
   standard: () =>
     new GroupDataBuilder()
-      .withGroupCode(generateGroupCodeSimple())
+      .withGroupCode(generateGroupCode())
       .withStartDateExact(2099, 12, 9)
       .withSchedule([
         {

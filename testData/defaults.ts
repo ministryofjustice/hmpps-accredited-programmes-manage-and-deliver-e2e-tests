@@ -26,8 +26,10 @@ export const AMPM_OPTIONS = ["am", "pm"] as const;
 
 /** Common PDU (Probation Delivery Unit) names  */
 export const PDU_OPTIONS = [
+  "East and West Lincolnshire",
   "Cleveland",
   "Durham",
+  "All NPS North East",
   "Northumbria",
   "Cumbria",
   "Lancashire",
@@ -50,20 +52,26 @@ export const PDU_OPTIONS = [
 /** Common delivery location examples */
 export const DELIVERY_LOCATION_OPTIONS = [
   "Middlesbrough (Borough Rd)",
-  "Stockton-on-Tees",
-  "Redcar",
-  "Durham",
-  "Peterlee",
+  "Middlesbrough (Albert Rd)",
+  "St Mark's House (Test)",
+  "MoJ Digital and Technology Hull",
+  "Harcourt House",
+  "All NPS Location Record",
+  "Bradford Victim Offender Unit",
+  "Boston office",
+  "Lincoln Magistrates Court",
+  "Ad_Primary - Lincoln Office",
 ] as const;
 
 /** Common staff/facilitator names for testing */
 export const STAFF_NAMES = [
-  "John Smith",
-  "Jane Doe",
-  "Michael Johnson",
-  "Sarah Williams",
-  "David Brown",
-  "Emma Davis",
+  "Alex River",
+  "Jane Samhim",
+  "Archibald Queeny",
+  "Alfie Rhenal",
+  "Alt Tasdel",
+  "Jody Dania",
+  "Rich James",
   "R&MP Practitioner",
   "Unallocated Staff",
 ] as const;
@@ -172,6 +180,6 @@ export const RECORD_ATTENDANCE =[
 export const RECORD_ATTENDANCE_NOTES =[
   "They attended and were compliant throughout.",
   "They could not participate because of drug or alcohol use.",
-  "They did not show up and made no contact to explain their absence.",
+  "They did not attend and made no contact to explain the absence.",
 ] as const;
 
