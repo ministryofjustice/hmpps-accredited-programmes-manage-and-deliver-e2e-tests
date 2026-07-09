@@ -178,37 +178,24 @@ export const selectAutocompleteOption = async (
   inputId: string,
   optionText: string
 ) => {
-  const comboboxInput = page.locator(`input#${inputId}`).first();
-  const directSelect = page.locator(`select#${inputId}`).first();
-  const backingSelect = page.locator(`select#${inputId}-select`).first();
+  await page.waitForSelector(`#${inputId}-select, #${inputId}`, {
+    state: "attached",
+    timeout: 10000,
+  });
 
-  if ((await directSelect.count()) > 0) {
-    await selectOptionByText(directSelect, optionText);
+  const backingSelect = page.locator(`select#${inputId}-select`);
+
+  // Prefer the backing select because GOV.UK autocomplete writes to it for form submit.
+  if ((await backingSelect.count()) > 0) {
+    await selectOptionByText(backingSelect, optionText);
     return;
   }
 
+  const comboboxInput = page.locator(`input#${inputId}`);
   if ((await comboboxInput.count()) > 0 && (await comboboxInput.isVisible())) {
-    const listbox = page.locator(`#${inputId}__listbox`);
-
-    await comboboxInput.click();
     await comboboxInput.fill(optionText);
-
-    const option = listbox.getByRole("option", { name: optionText }).first();
-    if ((await option.count()) > 0) {
-      try {
-        await option.click({ timeout: 2000 });
-        return;
-      } catch {
-        // Fall through to keyboard and select fallbacks.
-      }
-    }
-
     await comboboxInput.press("ArrowDown");
     await comboboxInput.press("Enter");
-  }
-
-  if ((await backingSelect.count()) > 0) {
-    await selectOptionByText(backingSelect, optionText);
     return;
   }
 
@@ -219,13 +206,6 @@ export const selectOptionByText = async (
   selectLocator: ReturnType<Page["locator"]>,
   optionText: string
 ) => {
-  try {
-    await selectLocator.selectOption({ label: optionText });
-    return;
-  } catch {
-    // Some pages keep the select hidden; set value directly and emit events.
-  }
-
   const selected = await selectLocator.evaluate((el, valueToSelect) => {
     const select = el as HTMLSelectElement;
     const matchingOption = Array.from(select.options).find(
