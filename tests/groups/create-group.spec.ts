@@ -70,18 +70,18 @@ test.describe("Create group", () => {
       });
 
      await test.step("10. Create group - Enter and submit pdu on probation delivery unit page", async () => {
-       await enterAndSubmitPdu(page, "Cleveland");  
+       await enterAndSubmitPdu(page, "All Greater Manchester");  
       });
 
     await test.step("11. Create group - Select and submit delivery location on Where will the group take place? page", async () => {
-       await selectAndSubmitDeliveryLocation(page, "Middlesbrough (Borough Rd)");
+       await selectAndSubmitDeliveryLocation(page, "All PS Location");
       });
 
     await test.step("12. Create group - Enter and submit group facilitators on Who is responsible for the group? page", async () => {
       await enterAndSubmitGroupFacilitators(
        page,
-       "R&MP Practitioner",
-       ["R&MP Practitioner"],
+       "TestStaffNine ForScript",
+       ["TestStaffNine ForScript"],
        ["Unallocated Staff"]
       );      
     });
@@ -93,10 +93,10 @@ test.describe("Create group", () => {
        ["Mondays, 1:01am to 3:31am", "Wednesdays, 2:02pm to 4:32pm"],
        "General offence, learning disabilities and challenges (LDC)",
        "Female",
-       "Cleveland",
-       "Middlesbrough (Borough Rd)",
-       "R&MP Practitioner",
-       ["R&MP Practitioner"],
+      "All Greater Manchester",
+      "All PS Location",
+       "TestStaffNine ForScript",
+       ["TestStaffNine ForScript"],
        ["Unallocated Staff"]
       );
     });
