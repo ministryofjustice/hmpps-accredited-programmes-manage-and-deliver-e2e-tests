@@ -131,11 +131,8 @@ export const enterAndSubmitGroupFacilitators = async (
   coverFacilitators: string[] | null
 ) => {
   await page.waitForTimeout(5000);
-  await selectAutocompleteOption(
-    page,
-    "create-group-treatment-manager",
-    treatmentManager || ""
-  );
+ await page.locator("#create-group-treatment-manager").fill(treatmentManager || "");
+  await page.keyboard.press("Enter");
 
   await addFacilitator(
     page,
@@ -163,58 +160,16 @@ export const addFacilitator = async (
   baseIdForOthers: string,
   buttonText: string
 ) => {
-  for (const [index, facilitator] of facilitators.entries()) {
+  for (const facilitator of facilitators) {
+    const index = facilitators.indexOf(facilitator);
     if (index === 0) {
-      await selectAutocompleteOption(page, idForIndex0, facilitator);
+      await page.locator(`#${idForIndex0}`).fill(facilitator);
     } else {
       await page.getByRole("button", { name: buttonText }).click();
-      await selectAutocompleteOption(page, `${baseIdForOthers}${index}`, facilitator);
+      await page.locator(`#${baseIdForOthers}${index}`).fill(facilitator);
     }
-  }
-};
-
-const selectAutocompleteOption = async (
-  page: Page,
-  inputId: string,
-  optionText: string
-) => {
-  await page.waitForSelector(`select#${inputId}-select`, {
-    state: "attached",
-    timeout: 10000,
-  });
-
-  const backingSelect = page.locator(`select#${inputId}-select`);
-  await selectOptionByText(backingSelect, optionText);
-};
-
-const selectOptionByText = async (
-  selectLocator: ReturnType<Page["locator"]>,
-  optionText: string
-) => {
-  await expect
-    .poll(async () => {
-      return await selectLocator.evaluate(el => (el as HTMLSelectElement).options.length);
-    }, { timeout: 10000 })
-    .toBeGreaterThan(1);
-
-  const selected = await selectLocator.evaluate((el, valueToSelect) => {
-    const select = el as HTMLSelectElement;
-    const matchingOption = Array.from(select.options).find(
-      option => option.text.trim() === valueToSelect.trim()
-    );
-
-    if (!matchingOption) {
-      return false;
-    }
-
-    select.value = matchingOption.value;
-    select.dispatchEvent(new Event("input", { bubbles: true }));
-    select.dispatchEvent(new Event("change", { bubbles: true }));
-    return true;
-  }, optionText);
-
-  if (!selected) {
-    throw new Error(`Option not found in select: ${optionText}`);
+    await page.keyboard.press("Enter");
+ 
   }
 };
 
