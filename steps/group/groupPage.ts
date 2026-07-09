@@ -178,42 +178,72 @@ export const selectAutocompleteOption = async (
   inputId: string,
   optionText: string
 ) => {
-  const input = page.locator(`#${inputId}`);
-  const listbox = page.locator(`#${inputId}__listbox`);
-  const backingSelect = page.locator(`#${inputId}-select`);
+  const comboboxInput = page.locator(`input#${inputId}`).first();
+  const directSelect = page.locator(`select#${inputId}`).first();
+  const backingSelect = page.locator(`select#${inputId}-select`).first();
 
-  await input.click();
-  await input.fill(optionText);
-
-  const option = listbox.getByRole("option", { name: optionText }).first();
-  const optionCount = await option.count();
-  if (optionCount > 0) {
-    try {
-      await option.click({ timeout: 2000 });
-      return;
-    } catch {
-      // Fall through to keyboard and select fallbacks.
-    }
+  if ((await directSelect.count()) > 0) {
+    await selectOptionByText(directSelect, optionText);
+    return;
   }
 
-  await input.press("ArrowDown");
-  await input.press("Enter");
+  if ((await comboboxInput.count()) > 0 && (await comboboxInput.isVisible())) {
+    const listbox = page.locator(`#${inputId}__listbox`);
+
+    await comboboxInput.click();
+    await comboboxInput.fill(optionText);
+
+    const option = listbox.getByRole("option", { name: optionText }).first();
+    if ((await option.count()) > 0) {
+      try {
+        await option.click({ timeout: 2000 });
+        return;
+      } catch {
+        // Fall through to keyboard and select fallbacks.
+      }
+    }
+
+    await comboboxInput.press("ArrowDown");
+    await comboboxInput.press("Enter");
+  }
 
   if ((await backingSelect.count()) > 0) {
-    await backingSelect.evaluate((el, valueToSelect) => {
-      const select = el as HTMLSelectElement;
-      const matchingOption = Array.from(select.options).find(
-        option => option.text.trim() === valueToSelect
-      );
+    await selectOptionByText(backingSelect, optionText);
+    return;
+  }
 
-      if (!matchingOption) {
-        return;
-      }
+  throw new Error(`Unable to find input or select control for ${inputId}`);
+};
 
-      select.value = matchingOption.value;
-      select.dispatchEvent(new Event("input", { bubbles: true }));
-      select.dispatchEvent(new Event("change", { bubbles: true }));
-    }, optionText);
+export const selectOptionByText = async (
+  selectLocator: ReturnType<Page["locator"]>,
+  optionText: string
+) => {
+  try {
+    await selectLocator.selectOption({ label: optionText });
+    return;
+  } catch {
+    // Some pages keep the select hidden; set value directly and emit events.
+  }
+
+  const selected = await selectLocator.evaluate((el, valueToSelect) => {
+    const select = el as HTMLSelectElement;
+    const matchingOption = Array.from(select.options).find(
+      option => option.text.trim() === valueToSelect
+    );
+
+    if (!matchingOption) {
+      return false;
+    }
+
+    select.value = matchingOption.value;
+    select.dispatchEvent(new Event("input", { bubbles: true }));
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    return true;
+  }, optionText);
+
+  if (!selected) {
+    throw new Error(`Option not found in select: ${optionText}`);
   }
 };
 
