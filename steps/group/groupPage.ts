@@ -131,8 +131,11 @@ export const enterAndSubmitGroupFacilitators = async (
   coverFacilitators: string[] | null
 ) => {
   await page.waitForTimeout(5000);
-  await page.locator("#create-group-treatment-manager").fill(treatmentManager || "");
-  await page.keyboard.press("Enter");
+  await selectAutocompleteOption(
+    page,
+    "create-group-treatment-manager",
+    treatmentManager || ""
+  );
 
   await addFacilitator(
     page,
@@ -160,16 +163,28 @@ export const addFacilitator = async (
   baseIdForOthers: string,
   buttonText: string
 ) => {
-  for (const facilitator of facilitators) {
-    const index = facilitators.indexOf(facilitator);
+  for (const [index, facilitator] of facilitators.entries()) {
     if (index === 0) {
-      await page.locator(`#${idForIndex0}`).fill(facilitator);
+      await selectAutocompleteOption(page, idForIndex0, facilitator);
     } else {
       await page.getByRole("button", { name: buttonText }).click();
-      await page.locator(`#${baseIdForOthers}${index}`).fill(facilitator);
+      await selectAutocompleteOption(page, `${baseIdForOthers}${index}`, facilitator);
     }
-    await page.keyboard.press("Enter");
   }
+};
+
+export const selectAutocompleteOption = async (
+  page: Page,
+  inputId: string,
+  optionText: string
+) => {
+  const input = page.locator(`#${inputId}`);
+  const listbox = page.locator(`#${inputId}__listbox`);
+
+  await input.fill(optionText);
+  const option = listbox.getByRole("option", { name: optionText });
+  await expect(option).toBeVisible();
+  await option.click();
 };
 
 export const verifyCheckAnswersPageContent = async (
