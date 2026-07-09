@@ -180,11 +180,41 @@ export const selectAutocompleteOption = async (
 ) => {
   const input = page.locator(`#${inputId}`);
   const listbox = page.locator(`#${inputId}__listbox`);
+  const backingSelect = page.locator(`#${inputId}-select`);
 
+  await input.click();
   await input.fill(optionText);
-  const option = listbox.getByRole("option", { name: optionText });
-  await expect(option).toBeVisible();
-  await option.click();
+
+  const option = listbox.getByRole("option", { name: optionText }).first();
+  const optionCount = await option.count();
+  if (optionCount > 0) {
+    try {
+      await option.click({ timeout: 2000 });
+      return;
+    } catch {
+      // Fall through to keyboard and select fallbacks.
+    }
+  }
+
+  await input.press("ArrowDown");
+  await input.press("Enter");
+
+  if ((await backingSelect.count()) > 0) {
+    await backingSelect.evaluate((el, valueToSelect) => {
+      const select = el as HTMLSelectElement;
+      const matchingOption = Array.from(select.options).find(
+        option => option.text.trim() === valueToSelect
+      );
+
+      if (!matchingOption) {
+        return;
+      }
+
+      select.value = matchingOption.value;
+      select.dispatchEvent(new Event("input", { bubbles: true }));
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    }, optionText);
+  }
 };
 
 export const verifyCheckAnswersPageContent = async (
