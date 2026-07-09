@@ -80,8 +80,8 @@ test.describe("Create group", () => {
     await test.step("12. Create group - Enter and submit group facilitators on Who is responsible for the group? page", async () => {
       await enterAndSubmitGroupFacilitators(
        page,
-       "R&MP Practitioner",
-       ["R&MP Practitioner"],
+       "TestStaffNine ForScript",
+       ["TestStaffNine ForScript"],
        ["Unallocated Staff"]
       );      
     });
@@ -95,8 +95,8 @@ test.describe("Create group", () => {
        "Female",
       "All Greater Manchester",
       "All PS Location",
-       "R&MP Practitioner",
-       ["R&MP Practitioner"],
+       "TestStaffNine ForScript",
+       ["TestStaffNine ForScript"],
        ["Unallocated Staff"]
       );
     });
