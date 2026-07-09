@@ -37,14 +37,14 @@ export const goToGroupListPage = async (page: Page) => {
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
   const createGroupControl = page
-    .getByRole("button", { name: /create group/i })
-    .or(page.getByRole("link", { name: /create group/i }))
+    .getByRole("button", { name: /Create group/i })
+    .or(page.getByRole("link", { name: /Create group/i }))
     .first();
 
   await expect(createGroupControl).toBeVisible();
   await createGroupControl.click();
   await expect(page).toHaveURL(/.*\/create-group$/);
-  await expect(page.getByRole("heading", { name: "Create group" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Create a group" })).toBeVisible();
 };
 
 export const goToCreateAGroupCodePageFromCreateAGroupPage = async (
