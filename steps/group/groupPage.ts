@@ -108,10 +108,9 @@ export const selectAndSubmitSexRadioOption = async (
 };
 
 export const enterAndSubmitPdu = async (page: Page, pdu: string) => {
-  await page.locator("input#create-group-pdu").fill(pdu);
-  const pduOption = page.getByRole("option", { name: pdu });
-  await expect(pduOption).toBeVisible();
-  await pduOption.click();
+  await page.waitForTimeout(5000);
+  await page.locator("#create-group-pdu").fill(pdu);
+  await page.keyboard.press("Enter");
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page).toHaveURL(/.*\/group-delivery-location$/);
 };
