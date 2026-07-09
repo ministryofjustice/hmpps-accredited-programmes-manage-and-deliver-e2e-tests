@@ -173,36 +173,21 @@ export const addFacilitator = async (
   }
 };
 
-export const selectAutocompleteOption = async (
+const selectAutocompleteOption = async (
   page: Page,
   inputId: string,
   optionText: string
 ) => {
-  await page.waitForSelector(`#${inputId}-select, #${inputId}`, {
+  await page.waitForSelector(`select#${inputId}-select`, {
     state: "attached",
     timeout: 10000,
   });
 
   const backingSelect = page.locator(`select#${inputId}-select`);
-
-  // Prefer the backing select because GOV.UK autocomplete writes to it for form submit.
-  if ((await backingSelect.count()) > 0) {
-    await selectOptionByText(backingSelect, optionText);
-    return;
-  }
-
-  const comboboxInput = page.locator(`input#${inputId}`);
-  if ((await comboboxInput.count()) > 0 && (await comboboxInput.isVisible())) {
-    await comboboxInput.fill(optionText);
-    await comboboxInput.press("ArrowDown");
-    await comboboxInput.press("Enter");
-    return;
-  }
-
-  throw new Error(`Unable to find input or select control for ${inputId}`);
+  await selectOptionByText(backingSelect, optionText);
 };
 
-export const selectOptionByText = async (
+const selectOptionByText = async (
   selectLocator: ReturnType<Page["locator"]>,
   optionText: string
 ) => {
