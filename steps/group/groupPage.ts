@@ -187,7 +187,7 @@ export const selectAutocompleteOption = async (
 
   // Prefer the backing select because GOV.UK autocomplete writes to it for form submit.
   if ((await backingSelect.count()) > 0) {
-    await selectOptionByText(backingSelect, optionText);
+    await selectOptionByText(backingSelect, optionText, `${inputId}-select`);
     return;
   }
 
@@ -204,26 +204,78 @@ export const selectAutocompleteOption = async (
 
 export const selectOptionByText = async (
   selectLocator: ReturnType<Page["locator"]>,
-  optionText: string
+  optionText: string,
+  controlName?: string
 ) => {
+  await expect
+    .poll(async () => {
+      return await selectLocator.evaluate(el => (el as HTMLSelectElement).options.length);
+    }, { timeout: 10000 })
+    .toBeGreaterThan(1);
+
+  if (process.env.CI) {
+    const snapshot = await selectLocator.evaluate(el => {
+      const select = el as HTMLSelectElement;
+      return {
+        id: select.id,
+        options: Array.from(select.options)
+          .map(option => option.text.trim())
+          .filter(Boolean)
+          .slice(0, 30),
+      };
+    });
+    console.log(
+      `[e2e-select-debug] ${controlName || snapshot.id} target="${optionText}" options=${snapshot.options.join(" | ")}`
+    );
+  }
+
   const selected = await selectLocator.evaluate((el, valueToSelect) => {
     const select = el as HTMLSelectElement;
-    const matchingOption = Array.from(select.options).find(
-      option => option.text.trim() === valueToSelect
-    );
+    const normalize = (value: string) =>
+      value
+        .toLowerCase()
+        .replace(/&amp;/g, "&")
+        .replace(/\s+/g, " ")
+        .replace(/[^a-z0-9 ]/g, "")
+        .trim();
+
+    const normalizedTarget = normalize(valueToSelect);
+    const options = Array.from(select.options);
+
+    let matchingOption = options.find(option => normalize(option.text) === normalizedTarget);
 
     if (!matchingOption) {
-      return false;
+      matchingOption = options.find(option => {
+        const candidate = normalize(option.text);
+        return candidate.includes(normalizedTarget) || normalizedTarget.includes(candidate);
+      });
+    }
+
+    if (!matchingOption) {
+      const targetTokens = normalizedTarget.split(" ").filter(token => token.length > 2);
+      matchingOption = options.find(option => {
+        const candidate = normalize(option.text);
+        return targetTokens.every(token => candidate.includes(token));
+      });
+    }
+
+    if (!matchingOption) {
+      return {
+        selected: false,
+        options: options.map(option => option.text.trim()).filter(Boolean).slice(0, 20),
+      };
     }
 
     select.value = matchingOption.value;
     select.dispatchEvent(new Event("input", { bubbles: true }));
     select.dispatchEvent(new Event("change", { bubbles: true }));
-    return true;
+    return { selected: true, options: [] as string[] };
   }, optionText);
 
-  if (!selected) {
-    throw new Error(`Option not found in select: ${optionText}`);
+  if (!selected.selected) {
+    throw new Error(
+      `Option not found in select: ${optionText}. Available options: ${selected.options.join(" | ")}`
+    );
   }
 };
 
