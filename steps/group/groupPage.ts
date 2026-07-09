@@ -37,8 +37,8 @@ export const goToGroupListPage = async (page: Page) => {
 
 export const goToCreateAGroupPageFromGroupListPage = async (page: Page) => {
   const createGroupControl = page
-    .getByRole("button", { name: /create( a)? group/i })
-    .or(page.getByRole("link", { name: /create( a)? group/i }))
+    .getByRole("button", { name: /Create group/i })
+    .or(page.getByRole("link", { name: /Create group/i }))
     .first();
 
   await expect(createGroupControl).toBeVisible();
