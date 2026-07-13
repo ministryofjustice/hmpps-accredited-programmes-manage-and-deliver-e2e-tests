@@ -89,7 +89,7 @@ test.describe("Create group", () => {
     await test.step("13. Create group - Verify check answers page", async () => {
       await verifyCheckAnswersPageContent(
        page,
-       "9/12/2099",
+       "Wednesday 9 December 2099",
        ["Mondays, 1:01am to 3:31am", "Wednesdays, 2:02pm to 4:32pm"],
        "General offence, learning disabilities and challenges (LDC)",
        "Female",
