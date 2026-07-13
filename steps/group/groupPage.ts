@@ -188,7 +188,7 @@ const formatStartDateForCheckAnswers = (date: string) => {
     day: "numeric",
     month: "long",
     year: "numeric",
-  }).format(parsedDate);
+  }).format(parsedDate).replace(", ", " ");
 };
 
 export const verifyCheckAnswersPageContent = async (
