@@ -240,7 +240,7 @@ export const verifyCheckAnswersPageContent = async (
 export const submitCheckYourAnswers = async (page: Page) => {
   await Promise.all([
     page.waitForURL(
-      /\/group\/[^/]+\/schedule-overview(?:\?message=Group%20.*%20created\.)?$/,
+      /\/group\/[^/]+\/schedule-overview\?message=Group%20.*%20created\.$/,
       { timeout: 20000 }
     ),
     page.getByRole("button", { name: "Create this group" }).click(),
