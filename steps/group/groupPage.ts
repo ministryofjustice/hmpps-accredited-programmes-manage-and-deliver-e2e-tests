@@ -172,6 +172,25 @@ export const addFacilitator = async (
   }
 };
 
+const formatStartDateForCheckAnswers = (date: string) => {
+  const datePattern = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+  const match = date.trim().match(datePattern);
+
+  if (!match) {
+    return date;
+  }
+
+  const [, day, month, year] = match;
+  const parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
+
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(parsedDate).replace(", ", " ");
+};
+
 export const verifyCheckAnswersPageContent = async (
   page: Page,
   date: string,
@@ -187,7 +206,9 @@ export const verifyCheckAnswersPageContent = async (
   await expect(page.locator('dt:has-text("Group code") + dd')).toContainText(
     "e2e-test-group-code"
   );
-  await expect(page.locator('dt:has-text("Start date") + dd')).toContainText(date);
+  await expect(page.locator('dt:has-text("Start date") + dd')).toContainText(
+    formatStartDateForCheckAnswers(date)
+  );
 
   const daysAndTimes = page.locator('dt:has-text("Days and times") + dd');
   for (const dayAndTimeValue of dayAndTime) {
@@ -217,8 +238,13 @@ export const verifyCheckAnswersPageContent = async (
 };
 
 export const submitCheckYourAnswers = async (page: Page) => {
-  await page.getByRole("button", { name: "Create this group" }).click();
-  await expect(page).toHaveURL(/\/group\/[^/]+\/schedule-overview\?message=Group%20.*%20created\./);
+  await Promise.all([
+    page.waitForURL(
+      /\/group\/[^/]+\/schedule-overview\?message=Group%20.*%20created\.$/,
+      { timeout: 20000 }
+    ),
+    page.getByRole("button", { name: "Create this group" }).click(),
+  ]);
 };
 
 export const verifyGroupCode = async (page: Page, groupCode: string) => {
