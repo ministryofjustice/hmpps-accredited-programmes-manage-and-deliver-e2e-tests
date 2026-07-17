@@ -237,6 +237,11 @@ export const verifyCheckAnswersPageContent = async (
   }
 };
 
+export const submitCheckYourAnswersForm = async (page: Page) => {
+  await page.getByRole("button", { name: "Create this group" }).click();
+  await expect(page).toHaveURL(/.*\/schedule-overview.*/);
+};
+
 export const verifyGroupCode = async (page: Page, groupCode: string) => {
   await goToGroupListPage(page);
   await page.locator("#groupCode").fill(groupCode);

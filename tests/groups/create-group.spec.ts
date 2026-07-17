@@ -12,6 +12,9 @@ import {
   selectAndSubmitCohortRadioOption,
   selectAndSubmitDeliveryLocation,
   selectAndSubmitSexRadioOption,
+  submitCheckYourAnswersForm,
+  verifyCheckAnswersPageContent,
+  verifyGroupCode,
   WhenWillGroupRunData,
 } from "../../steps/group/groupPage";
 
@@ -77,10 +80,33 @@ test.describe("Create group", () => {
     await test.step("12. Create group - Enter and submit group facilitators on Who is responsible for the group? page", async () => {
       await enterAndSubmitGroupFacilitators(
        page,
-       "TestStaffNine ForScript",
-       ["TestStaffNine ForScript"],
-       ["Unallocated Staff"]
+       "ApprovedPremises",
+       ["NccManagerAssessor2"],
+       ["Archibald Queeny"]
       );      
+    });
+
+    await test.step("13. Create group - Verify check your answers page", async () => {
+      await verifyCheckAnswersPageContent(
+        page,
+        "9/12/2099",
+        ["Mondays, 1:01am to 3:31am", "Wednesdays, 2:02pm to 4:32pm"],
+        "General offence, learning disabilities and challenges (LDC)",
+        "Female",
+        "All Greater Manchester",
+        "Head Office",
+        "ApprovedPremises",
+        ["NccManagerAssessor2"],
+        ["Archibald Queeny"]
+      );
+    });
+
+    await test.step("14. Create group - Submit check your answers form", async () => {
+      await submitCheckYourAnswersForm(page);
+    });
+
+    await test.step("15. Create group - Verify group was created and appears in the list", async () => {
+      await verifyGroupCode(page, groupCode);
     });
   });
 });
