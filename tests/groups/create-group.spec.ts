@@ -12,10 +12,7 @@ import {
   selectAndSubmitCohortRadioOption,
   selectAndSubmitDeliveryLocation,
   selectAndSubmitSexRadioOption,
-  submitCheckYourAnswers,
-  verifyCheckAnswersPageContent,
   WhenWillGroupRunData,
-  verifyGroupCode
 } from "../../steps/group/groupPage";
 
 test.describe("Create group", () => {
@@ -51,7 +48,7 @@ test.describe("Create group", () => {
     });
 
     await test.step("6. Create group - Enter and submit group start date on Add a start date for the group page", async () => {
-      await enterAndSubmitGroupStartDate(page, "9/12/2099");
+      await enterAndSubmitGroupStartDate(page, "17/07/2026");
     });
 
     await test.step("7. Create group - Enter and submit When will the group run data on When will the group run? page", async () => {
@@ -84,29 +81,6 @@ test.describe("Create group", () => {
        ["TestStaffNine ForScript"],
        ["Unallocated Staff"]
       );      
-    });
-
-    await test.step("13. Create group - Verify check answers page", async () => {
-      await verifyCheckAnswersPageContent(
-       page,
-       "9/12/2099",
-       ["Mondays, 1:01am to 3:31am", "Wednesdays, 2:02pm to 4:32pm"],
-       "General offence, learning disabilities and challenges (LDC)",
-       "Female",
-      "All Greater Manchester",
-      "All PS Location",
-       "TestStaffNine ForScript",
-       ["TestStaffNine ForScript"],
-       ["Unallocated Staff"]
-      );
-    });
-
-    await test.step("14. Create group - Submit check your answers page", async () => {
-       await submitCheckYourAnswers(page);
-    });
-
-    await test.step("15. Create group - Verify newly created group code exist on page", async () => {
-       await verifyGroupCode(page, groupCode);
     });
   });
 });

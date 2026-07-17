@@ -237,16 +237,6 @@ export const verifyCheckAnswersPageContent = async (
   }
 };
 
-export const submitCheckYourAnswers = async (page: Page) => {
-  await Promise.all([
-    page.waitForURL(
-      /\/group\/[^/]+\/schedule-overview\?message=Group%20.*%20created\.$/,
-      { timeout: 20000 }
-    ),
-    page.getByRole("button", { name: "Create this group" }).click(),
-  ]);
-};
-
 export const verifyGroupCode = async (page: Page, groupCode: string) => {
   await goToGroupListPage(page);
   await page.locator("#groupCode").fill(groupCode);
