@@ -135,17 +135,16 @@ export const enterAndSubmitGroupFacilitators = async (
   await page.keyboard.press("Enter");
 
   await addFacilitator(
-    page,
-    facilitators || [],
-    "create-group-facilitator",
-    "create-group-facilitator-select",
-    "Add another facilitator"
-  );
+  page,
+  facilitators || [],
+  "create-group-facilitator",
+  "Add another facilitator"
+);
+
   await addFacilitator(
     page,
     coverFacilitators || [],
     "create-group-cover-facilitator",
-    "create-group-cover-facilitator-select",
     "Add another cover facilitator"
   );
 
@@ -153,24 +152,27 @@ export const enterAndSubmitGroupFacilitators = async (
   await expect(page).toHaveURL(/.*\/group-review-details$/);
 };
 
+
+
 export const addFacilitator = async (
   page: Page,
   facilitators: string[],
-  idForIndex0: string,
-  baseIdForOthers: string,
+  baseId: string,
   buttonText: string
 ) => {
-  for (const facilitator of facilitators) {
-    const index = facilitators.indexOf(facilitator);
-    if (index === 0) {
-      await page.locator(`#${idForIndex0}`).fill(facilitator);
-    } else {
+  for (const [index, facilitator] of facilitators.entries()) {
+    if (index > 0) {
       await page.getByRole("button", { name: buttonText }).click();
-      await page.locator(`#${baseIdForOthers}${index}`).fill(facilitator);
     }
-    await page.keyboard.press("Enter");
+
+    const input = page.locator(`#${baseId}-${index}`);
+
+    await input.waitFor({ state: "visible" });
+    await input.fill(facilitator);
+    await input.press("Enter");
   }
 };
+
 
 const formatStartDateForCheckAnswers = (date: string) => {
   const datePattern = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
@@ -250,6 +252,6 @@ export const submitCheckYourAnswers = async (page: Page) => {
 export const verifyGroupCode = async (page: Page, groupCode: string) => {
   await goToGroupListPage(page);
   await page.locator("#groupCode").fill(groupCode);
-  await page.getByRole("button", { name: "Apply filters" }).click();
+  await page.getByRole("button", { name: "Apply filters" }).first().click();
   await expect(page.locator(`text=${groupCode}`)).toBeVisible();
 };
