@@ -28,7 +28,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-prettier": "^5.2.3",
-    "lint-staged": "^15.4.3"
+    "lint-staged": "^17.4.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
